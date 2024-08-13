@@ -8,12 +8,7 @@ from langchain_community.tools import ArxivQueryRun, WikipediaQueryRun, DuckDuck
 from langchain.agents import initialize_agent, AgentType
 from langchain.callbacks import StreamlitCallbackHandler
 
-load_dotenv()
-os.environ['LANGCHAIN_API_KEY'] = os.getenv('LANGCHAIN_API_KEY')
-os.environ['LANGCHAIN_TRACING_V2'] = 'true'
-os.environ['LANGCHAIN_PROJECT'] = 'End To End Search Engine GEN AI App using Tools And Agent With Open Source LLM'
-os.environ['GROQ_API_KEY'] = os.getenv('GROQ_API_KEY')
-os.environ['OPENAI_API_KEY']=os.getenv("OPENAI_API_KEY")
+groq_api_key = st.sidebar.text_input("Enter your Groq API key:")
 
 ## Tolls
 api_wrapper_wiki = WikipediaAPIWrapper(top_k_results= 1, doc_content_chars_max= 200)
@@ -42,7 +37,7 @@ if prompt:= st.chat_input(placeholder='What is Machine Learning?'):
     st.session_state.messages.append({'role':'user', 'content': prompt})
     st.chat_message('user').write(prompt)
 
-    llm = ChatGroq(model_name = 'Llama3-8b-8192', streaming= True)
+    llm = ChatGroq(groq_api_key=groq_api_key, model_name = 'Llama3-8b-8192', streaming= True)
     tools = [web_search, wiki, arxiv]
 
     # Converting the tools in agents:
